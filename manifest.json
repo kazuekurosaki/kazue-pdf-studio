@@ -1,0 +1,18 @@
+{
+  "background_color": "#ffffff",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "Kazue Pdf Studio",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "Kazue Studio",
+  "start_url": "https://kazuekurosaki.github.io/kazue-pdf-studio/",
+  "theme_color": "#ffffff",
+  "lang": "id",
+  "categories": [
+    "books",
+    "education",
+    "entertainment",
+    "productivity"
+  ]
+}
