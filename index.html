@@ -3,135 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kazue Studio V3 - Ultimate Professional Edition</title>
-    
-    <!-- Libraries -->
+    <title>Kazue Studio V4 - Ultra Stable</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;700&family=Inter:wght@400;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; background: #020617; color: #f1f5f9; -webkit-tap-highlight-color: transparent; }
         .novel-font { font-family: 'Crimson Pro', serif; }
-        
-        /* Loader System */
-        #loader { 
-            display: none; 
-            background: rgba(0,0,0,0.9); 
-            position: fixed; 
-            inset: 0; 
-            z-index: 9999; 
-            align-items: center; 
-            justify-content: center; 
-            flex-direction: column; 
-            pointer-events: all;
-        }
-
-        /* UI Styling */
-        .glass-panel { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(30, 41, 59, 1); }
-        input, textarea { background: #0f172a !important; border: 1px solid #1e293b !important; color: white !important; width: 100%; }
-        input:focus, textarea:focus { border-color: #3b82f6 !important; outline: none; box-shadow: 0 0 15px rgba(59, 130, 246, 0.2); }
-        
-        /* Editor Card */
-        .block-card:hover .delete-trigger { opacity: 1; }
-        .btn-action { transition: transform 0.1s; cursor: pointer; position: relative; z-index: 50; }
-        .btn-action:active { transform: scale(0.95); }
-
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        #loader { display: none; background: rgba(0,0,0,0.9); position: fixed; inset: 0; z-index: 9999; align-items: center; justify-content: center; flex-direction: column; }
+        input, textarea { background: #0f172a !important; border: 1px solid #1e293b !important; color: white !important; }
+        .btn-click { cursor: pointer; transition: transform 0.1s; position: relative; z-index: 10; }
+        .btn-click:active { transform: scale(0.95); }
+        .card-bg { background: rgba(15, 23, 42, 0.9); border: 1px solid #1e293b; }
     </style>
 </head>
 <body class="min-h-screen pb-20">
 
-    <!-- Screen Loader -->
     <div id="loader">
-        <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500 mb-4 shadow-[0_0_20px_rgba(59,130,246,0.5)]"></div>
-        <p id="loaderText" class="text-blue-400 font-black tracking-widest animate-pulse text-[10px] uppercase text-center px-8">Kazue Studio: Processing...</p>
+        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-blue-500 mb-4"></div>
+        <p id="loaderText" class="text-blue-400 font-bold text-[10px] uppercase tracking-widest">Processing...</p>
     </div>
 
-    <div class="max-w-7xl mx-auto p-4 lg:p-10">
-        <!-- HEADER -->
-        <header class="flex flex-col md:flex-row justify-between items-center mb-10 gap-6 glass-panel p-8 rounded-[3rem] shadow-2xl">
+    <div class="max-w-6xl mx-auto p-4 lg:p-10">
+        <header class="flex flex-col md:flex-row justify-between items-center mb-8 gap-6 card-bg p-6 rounded-[2.5rem]">
             <div class="text-center md:text-left">
-                <h1 class="text-5xl font-black text-white tracking-tighter italic">KAZUE <span class="text-blue-600">STUDIO</span></h1>
-                <div class="flex items-center gap-2 mt-2 justify-center md:justify-start">
-                    <div class="h-2 w-2 rounded-full bg-blue-500 animate-pulse"></div>
-                    <span id="saveStatus" class="text-[9px] text-blue-400 uppercase font-black tracking-[0.2em]">System Online</span>
-                </div>
+                <h1 class="text-4xl font-black italic tracking-tighter">KAZUE <span class="text-blue-600">STUDIO</span></h1>
+                <p id="saveStatus" class="text-[9px] text-slate-500 uppercase font-bold mt-1 tracking-widest">System Ready</p>
             </div>
-            <div class="flex flex-wrap justify-center gap-3">
-                <button type="button" onclick="resetStudio()" class="btn-action bg-slate-800 text-white px-6 py-3 rounded-2xl text-[10px] font-bold uppercase tracking-widest border border-slate-700">Reset</button>
-                <button type="button" onclick="generatePDF()" class="btn-action bg-blue-600 text-white font-black px-10 py-4 rounded-2xl shadow-xl uppercase text-sm tracking-tight">Generate PDF</button>
+            <div class="flex gap-2">
+                <button onclick="resetStudio()" class="btn-click bg-slate-800 text-white px-5 py-3 rounded-xl text-[10px] font-bold uppercase">Reset</button>
+                <button onclick="generatePDF()" class="btn-click bg-blue-600 text-white font-black px-8 py-3 rounded-xl text-xs uppercase shadow-lg">Generate PDF</button>
             </div>
         </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
-            <!-- SIDEBAR CONTROLS -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <!-- PANEL KIRI -->
             <div class="lg:col-span-4 space-y-6">
-                <!-- Cover Card -->
-                <div class="glass-panel p-6 rounded-[2.5rem] shadow-xl">
-                    <h2 class="text-[10px] font-black text-blue-500 uppercase tracking-[0.2em] mb-4">Master Cover</h2>
-                    <div id="coverPreview" class="hidden mb-4 relative rounded-2xl overflow-hidden shadow-2xl border border-slate-700">
+                <!-- Cover -->
+                <div class="card-bg p-6 rounded-[2rem] shadow-xl">
+                    <h2 class="text-[10px] font-black text-blue-500 uppercase mb-4 tracking-widest">Main Cover</h2>
+                    <div id="coverPreview" class="hidden mb-4 relative rounded-xl overflow-hidden border border-slate-700">
                         <img id="imgCover" src="#" class="w-full h-auto">
-                        <button type="button" onclick="removeCover()" class="absolute top-3 right-3 bg-red-600 text-white w-8 h-8 rounded-full font-bold shadow-xl">×</button>
+                        <button onclick="removeCover()" class="absolute top-2 right-2 bg-red-600 text-white w-7 h-7 rounded-full text-xs">×</button>
                     </div>
-                    <label class="btn-action flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-slate-800 rounded-3xl cursor-pointer hover:bg-slate-800 transition">
-                        <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Set Front Cover</p>
+                    <label class="btn-click flex flex-col items-center justify-center w-full h-20 border-2 border-dashed border-slate-800 rounded-2xl">
+                        <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest">Set Cover Image</p>
                         <input type="file" id="coverInput" class="hidden" accept="image/*" onchange="handleFile(event, 'cover')" />
                     </label>
                 </div>
 
-                <!-- Content Creator -->
-                <div class="glass-panel p-6 rounded-[2.5rem] shadow-xl">
-                    <h2 class="text-[10px] font-black text-blue-500 uppercase tracking-[0.2em] mb-4">Add Content</h2>
-                    <div class="grid grid-cols-2 gap-4 mb-4">
-                        <button type="button" onclick="addBlock('header')" class="btn-action bg-slate-100 text-slate-900 h-16 rounded-2xl font-black uppercase text-xs shadow-lg">Judul Bab</button>
-                        <button type="button" onclick="addBlock('text')" class="btn-action bg-blue-600 text-white h-16 rounded-2xl font-black uppercase text-xs shadow-lg">Paragraf</button>
-                        <button type="button" onclick="document.getElementById('bulkImg').click()" class="btn-action col-span-2 bg-slate-800 text-slate-400 h-14 rounded-2xl font-black uppercase text-[10px] border border-slate-700 tracking-widest">+ Upload Ilustrasi</button>
+                <!-- Add Content -->
+                <div class="card-bg p-6 rounded-[2rem] shadow-xl">
+                    <h2 class="text-[10px] font-black text-blue-500 uppercase mb-4 tracking-widest">Add Content</h2>
+                    <div class="grid grid-cols-2 gap-3 mb-4">
+                        <button onclick="addBlock('header')" class="btn-click bg-slate-100 text-slate-900 h-14 rounded-xl font-black uppercase text-[10px]">Judul Bab</button>
+                        <button onclick="addBlock('text')" class="btn-click bg-blue-600 text-white h-14 rounded-xl font-black uppercase text-[10px]">Paragraf</button>
+                        <button onclick="document.getElementById('bulkImg').click()" class="btn-click col-span-2 border border-slate-700 h-12 rounded-xl text-[9px] font-bold text-slate-400 uppercase tracking-widest">+ Upload Ilustrasi</button>
                         <input type="file" id="bulkImg" multiple accept="image/*" class="hidden" onchange="handleFile(event, 'bulk')">
                     </div>
-                    <div class="flex gap-2">
-                        <input type="text" id="urlInput" placeholder="URL Gambar..." class="flex-1 p-3 rounded-xl text-[10px]">
-                        <button type="button" onclick="addImageFromUrl()" class="btn-action bg-slate-800 px-4 rounded-xl text-[10px] font-black">ADD</button>
+                    <div class="flex gap-1">
+                        <input type="text" id="urlInput" placeholder="Image URL..." class="flex-1 p-2 rounded-lg text-[10px]">
+                        <button onclick="addImageFromUrl()" class="btn-click bg-slate-800 px-3 rounded-lg text-[9px] font-bold">ADD</button>
                     </div>
                 </div>
 
-                <!-- Metadata Card -->
-                <div class="glass-panel p-6 rounded-[2.5rem] shadow-xl space-y-3">
-                    <h2 class="text-[10px] font-black text-blue-500 uppercase tracking-[0.2em] mb-2">Extended Metadata</h2>
-                    <input type="text" id="title" oninput="autoSave()" placeholder="Judul Novel" class="p-4 rounded-xl text-sm font-bold">
-                    <input type="text" id="author" oninput="autoSave()" placeholder="Penulis" class="p-3 rounded-xl text-sm">
+                <!-- Info Buku -->
+                <div class="card-bg p-6 rounded-[2rem] space-y-3">
+                    <h2 class="text-[10px] font-black text-blue-500 uppercase mb-2 tracking-widest">Metadata</h2>
+                    <input type="text" id="title" oninput="autoSave()" placeholder="Judul Novel" class="p-3 rounded-xl text-xs font-bold">
+                    <input type="text" id="author" oninput="autoSave()" placeholder="Penulis" class="p-3 rounded-xl text-xs">
                     <div class="grid grid-cols-2 gap-2">
-                        <input type="text" id="genre" oninput="autoSave()" placeholder="Genre" class="p-3 rounded-xl text-xs">
-                        <input type="text" id="publisher" oninput="autoSave()" placeholder="Penerbit" class="p-3 rounded-xl text-xs">
+                        <input type="text" id="genre" oninput="autoSave()" placeholder="Genre" class="p-3 rounded-xl text-[10px]">
+                        <input type="text" id="publisher" oninput="autoSave()" placeholder="Penerbit" class="p-3 rounded-xl text-[10px]">
                     </div>
                     <div class="grid grid-cols-2 gap-2">
-                        <input type="text" id="illustrator" oninput="autoSave()" placeholder="Ilustrator" class="p-3 rounded-xl text-xs">
-                        <input type="text" id="translator" oninput="autoSave()" placeholder="Penerjemah" class="p-3 rounded-xl text-xs">
+                        <input type="text" id="illustrator" oninput="autoSave()" placeholder="Ilustrator" class="p-3 rounded-xl text-[10px]">
+                        <input type="text" id="translator" oninput="autoSave()" placeholder="Penerjemah" class="p-3 rounded-xl text-[10px]">
                     </div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <input type="date" id="relDate" oninput="autoSave()" class="p-3 rounded-xl text-xs">
-                        <input type="text" id="serial" oninput="autoSave()" placeholder="ISBN / Seri" class="p-3 rounded-xl text-xs">
-                    </div>
-                    <textarea id="synopsis" oninput="autoSave()" rows="3" placeholder="Sinopsis..." class="p-4 rounded-xl text-xs resize-none"></textarea>
+                    <input type="text" id="serial" oninput="autoSave()" placeholder="ISBN / Seri" class="p-3 rounded-xl text-[10px]">
+                    <textarea id="synopsis" oninput="autoSave()" rows="3" placeholder="Sinopsis..." class="p-3 rounded-xl text-[10px] resize-none"></textarea>
                 </div>
             </div>
 
-            <!-- EDITOR CANVAS -->
+            <!-- EDITOR -->
             <div class="lg:col-span-8">
-                <div class="glass-panel min-h-screen rounded-[3.5rem] p-6 lg:p-12 shadow-2xl relative">
-                    <div class="flex justify-between items-center mb-10 border-b border-slate-800 pb-6">
-                        <h2 class="text-2xl font-black italic tracking-tighter text-white uppercase">Draft Editor</h2>
-                        <span id="counter" class="text-[9px] font-black bg-slate-800 text-slate-500 px-4 py-2 rounded-full border border-slate-700 tracking-[0.2em]">0 BLOCKS</span>
-                    </div>
+                <div class="card-bg min-h-[600px] rounded-[2.5rem] p-6 lg:p-10 relative">
+                    <h2 class="text-xl font-black italic mb-6 border-b border-slate-800 pb-4 uppercase tracking-tighter">Draft Canvas</h2>
                     <div id="editorSpace" class="space-y-6">
-                        <!-- State Kosong -->
-                        <div id="emptyState" class="text-center py-40 opacity-20">
-                            <p class="text-8xl mb-4">🖋️</p>
-                            <p class="font-black uppercase tracking-[0.4em] text-xs">Studio Kazue Ready</p>
-                        </div>
+                        <div id="emptyState" class="text-center py-40 opacity-10 uppercase tracking-widest text-xs font-black">Studio Ready</div>
                     </div>
                 </div>
             </div>
@@ -144,39 +103,29 @@
         let blocks = [];
         let db;
 
-        // --- 1. AUTOSAVE DATABASE (IndexedDB) ---
-        const request = indexedDB.open("KazueProDB_V3", 1);
-        request.onupgradeneeded = e => {
-            db = e.target.result;
-            if(!db.objectStoreNames.contains("novel")) db.createObjectStore("novel", { keyPath: "id" });
-        };
-        request.onsuccess = e => { db = e.target.result; loadFromDB(); };
+        // DB INIT
+        const req = indexedDB.open("KazueFinalDB_V4", 1);
+        req.onupgradeneeded = e => { e.target.result.createObjectStore("novel", { keyPath: "id" }); };
+        req.onsuccess = e => { db = e.target.result; loadProj(); };
 
         function autoSave() {
             if(!db) return;
-            document.getElementById('saveStatus').innerText = "Syncing...";
             const data = {
-                id: "active_project",
-                title: document.getElementById('title').value,
-                author: document.getElementById('author').value,
-                genre: document.getElementById('genre').value,
-                publisher: document.getElementById('publisher').value,
-                illustrator: document.getElementById('illustrator').value,
-                translator: document.getElementById('translator').value,
-                relDate: document.getElementById('relDate').value,
-                serial: document.getElementById('serial').value,
-                synopsis: document.getElementById('synopsis').value,
-                cover: coverBase64,
-                blocks: blocks
+                id: "active", title: document.getElementById('title').value,
+                author: document.getElementById('author').value, genre: document.getElementById('genre').value,
+                publisher: document.getElementById('publisher').value, illustrator: document.getElementById('illustrator').value,
+                translator: document.getElementById('translator').value, serial: document.getElementById('serial').value,
+                synopsis: document.getElementById('synopsis').value, cover: coverBase64, blocks: blocks
             };
             const tx = db.transaction("novel", "readwrite");
             tx.objectStore("novel").put(data);
-            tx.oncomplete = () => document.getElementById('saveStatus').innerText = "Autosaved";
+            document.getElementById('saveStatus').innerText = "Syncing...";
+            tx.oncomplete = () => { document.getElementById('saveStatus').innerText = "Autosaved"; };
         }
 
-        function loadFromDB() {
+        function loadProj() {
             const tx = db.transaction("novel", "readonly");
-            const req = tx.objectStore("novel").get("active_project");
+            const req = tx.objectStore("novel").get("active");
             req.onsuccess = () => {
                 const d = req.result; if(!d) return;
                 document.getElementById('title').value = d.title || "";
@@ -185,22 +134,17 @@
                 document.getElementById('publisher').value = d.publisher || "";
                 document.getElementById('illustrator').value = d.illustrator || "";
                 document.getElementById('translator').value = d.translator || "";
-                document.getElementById('relDate').value = d.relDate || "";
                 document.getElementById('serial').value = d.serial || "";
                 document.getElementById('synopsis').value = d.synopsis || "";
-                if(d.cover) {
-                    coverBase64 = d.cover;
-                    document.getElementById('imgCover').src = d.cover;
-                    document.getElementById('coverPreview').classList.remove('hidden');
-                }
+                if(d.cover) { coverBase64 = d.cover; document.getElementById('imgCover').src = d.cover; document.getElementById('coverPreview').classList.remove('hidden'); }
                 blocks = d.blocks || [];
                 render();
             };
         }
 
-        function resetStudio() { if(confirm("Hapus semua draf?")) { indexedDB.deleteDatabase("KazueProDB_V3"); location.reload(); } }
+        function resetStudio() { if(confirm("Reset semua data?")) { indexedDB.deleteDatabase("KazueFinalDB_V4"); location.reload(); } }
 
-        // --- 2. IMAGE COMPRESSION ENGINE ---
+        // COMPRESSION
         async function compressImg(base64) {
             return new Promise((resolve) => {
                 const img = new Image();
@@ -208,25 +152,23 @@
                 img.onload = () => {
                     const canvas = document.createElement('canvas');
                     let w = img.width, h = img.height;
-                    if (w > 1600 || h > 1600) {
-                        const r = Math.min(1600/w, 1600/h);
-                        w *= r; h *= r;
-                    }
+                    if (w > 1500 || h > 1500) { const r = Math.min(1500/w, 1500/h); w *= r; h *= r; }
                     canvas.width = w; canvas.height = h;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, w, h);
-                    resolve(canvas.toDataURL('image/jpeg', 0.75));
+                    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                    resolve(canvas.toDataURL('image/jpeg', 0.7));
                 };
             });
         }
 
+        // HANDLERS
         async function handleFile(e, mode) {
             const files = Array.from(e.target.files);
             if(!files.length) return;
             const loader = document.getElementById('loader');
             loader.style.display = 'flex';
             try {
-                await Promise.all(files.map(async (file) => {
+                // Sequential processing (One by one) to prevent crash
+                for(const file of files) {
                     const b64 = await new Promise(r => {
                         const fr = new FileReader();
                         fr.onload = ev => r(ev.target.result);
@@ -240,9 +182,10 @@
                     } else {
                         blocks.push({ id: Date.now() + Math.random(), type: 'image', value: comp });
                     }
-                }));
+                }
                 render(); autoSave();
-            } finally { loader.style.display = 'none'; }
+            } catch(e) { alert("Error processing image."); }
+            finally { loader.style.display = 'none'; }
         }
 
         async function addImageFromUrl() {
@@ -262,60 +205,37 @@
                 blocks.push({ id: Date.now() + Math.random(), type: 'image', value: comp });
                 render(); autoSave();
                 document.getElementById('urlInput').value = '';
-            } catch(e) { alert("CORS / URL Error."); }
+            } catch(e) { alert("CORS Error / Invalid URL"); }
             finally { loader.style.display = 'none'; }
         }
 
-        function removeCover() {
-            coverBase64 = null;
-            document.getElementById('coverPreview').classList.add('hidden');
-            autoSave();
-        }
-
-        // --- 3. EDITOR RENDER ---
-        function addBlock(type) {
-            blocks.push({ id: Date.now() + Math.random(), type, value: "" });
-            render();
-            autoSave();
-        }
-
-        function updateBlock(id, val) {
-            const idx = blocks.findIndex(b => b.id === id);
-            blocks[idx].value = val;
-            autoSave();
-        }
-
-        function deleteBlock(id) {
-            blocks = blocks.filter(b => b.id !== id);
-            render();
-            autoSave();
-        }
+        function removeCover() { coverBase64 = null; document.getElementById('coverPreview').classList.add('hidden'); autoSave(); }
+        function addBlock(type) { blocks.push({ id: Date.now() + Math.random(), type, value: "" }); render(); autoSave(); }
+        function updateBlock(id, val) { const idx = blocks.findIndex(b => b.id === id); blocks[idx].value = val; autoSave(); }
+        function deleteBlock(id) { blocks = blocks.filter(b => b.id !== id); render(); autoSave(); }
 
         function render() {
             const space = document.getElementById('editorSpace');
             space.innerHTML = '';
             document.getElementById('emptyState').style.display = blocks.length ? 'none' : 'block';
-            document.getElementById('counter').innerText = `${blocks.length} BLOCKS`;
-
             blocks.forEach((b, i) => {
                 const div = document.createElement('div');
-                div.className = "block-card relative bg-slate-950/50 p-6 rounded-3xl border border-slate-800 transition hover:border-slate-700";
+                div.className = "p-6 rounded-2xl bg-slate-950/50 border border-slate-800 relative group";
                 let input = b.type === 'header' ? 
-                    `<input type="text" class="w-full bg-transparent font-black text-2xl outline-none" value="${b.value}" oninput="updateBlock(${b.id}, this.value)" placeholder="JUDUL BAB...">` :
+                    `<input type="text" class="w-full bg-transparent font-black text-xl outline-none" value="${b.value}" oninput="updateBlock(${b.id}, this.value)" placeholder="JUDUL BAB...">` :
                     b.type === 'text' ? 
-                    `<textarea class="w-full bg-transparent novel-font text-lg outline-none resize-none" rows="5" oninput="updateBlock(${b.id}, this.value)" placeholder="Tulis cerita novel di sini...">${b.value}</textarea>` :
-                    `<div class="text-center"><img src="${b.value}" class="max-h-80 rounded-2xl mx-auto shadow-2xl border border-slate-800"></div>`;
+                    `<textarea class="w-full bg-transparent novel-font text-lg outline-none resize-none" rows="5" oninput="updateBlock(${b.id}, this.value)" placeholder="Cerita...">${b.value}</textarea>` :
+                    `<div class="text-center"><img src="${b.value}" class="max-h-64 rounded-xl mx-auto border border-slate-800"></div>`;
                 
-                div.innerHTML = `<div class="flex justify-between mb-4 border-b border-slate-800 pb-2 text-[8px] font-black uppercase text-slate-600"><span>Item #${i+1} - ${b.type}</span><button type="button" onclick="deleteBlock(${b.id})" class="delete-trigger opacity-0 text-red-500 font-bold uppercase transition">Hapus</button></div>${input}`;
+                div.innerHTML = `<div class="flex justify-between mb-2 text-[8px] font-black uppercase text-slate-700"><span>#${i+1} - ${b.type}</span><button onclick="deleteBlock(${b.id})" class="text-red-500 font-bold uppercase transition">Hapus</button></div>${input}`;
                 space.appendChild(div);
             });
         }
 
-        // --- 4. PDF GENERATOR ---
+        // GENERATOR
         async function generatePDF() {
             const loader = document.getElementById('loader');
             loader.style.display = 'flex';
-            document.getElementById('loaderText').innerText = "GENERATING PDF...";
             try {
                 const doc = new jsPDF({ unit: 'mm', format: 'a4', compress: true });
                 const pW = 210, pH = 297, margin = 25, cW = pW - (margin * 2);
@@ -328,11 +248,11 @@
                 }
 
                 doc.addPage('a4', 'p');
-                doc.setFont("times", "bold").setFontSize(30).text((document.getElementById('title').value || "NOVEL").toUpperCase(), pW/2, 70, { align: 'center' });
+                doc.setFont("times", "bold").setFontSize(28).text((document.getElementById('title').value || "NOVEL").toUpperCase(), pW/2, 60, { align: 'center' });
                 doc.setFontSize(14).setFont("times", "normal");
-                let y = 90;
-                [['Penulis','author'],['Genre','genre'],['Penerbit','publisher'],['Illustrator','illustrator'],['Penerjemah','translator'],['Rilis','relDate'],['Seri','serial']].forEach(m => {
-                    const v = document.getElementById(m[1]).value; if(v) { doc.text(`${m[0]}: ${v}`, pW/2, y, { align: 'center' }); y += 10; }
+                let y = 80;
+                [['Penulis','author'],['Genre','genre'],['Illustrator','illustrator'],['Penerjemah','translator'],['Penerbit','publisher'],['Seri','serial']].forEach(m => {
+                    const v = document.getElementById(m[1]).value; if(v) { doc.text(`${m[0]}: ${v}`, pW/2, y, { align: 'center' }); y += 8; }
                 });
 
                 const syn = document.getElementById('synopsis').value;
@@ -342,8 +262,7 @@
                 for (const b of blocks) {
                     if (b.type === 'header') {
                         if (curY > 50) { doc.addPage('a4', 'p'); curY = 30; }
-                        doc.setFont("times", "bold").setFontSize(22);
-                        doc.text(b.value, margin, curY); curY += 15;
+                        doc.setFont("times", "bold").setFontSize(22).text(b.value, margin, curY); curY += 15;
                     } else if (b.type === 'text') {
                         doc.setFont("times", "normal").setFontSize(12);
                         const lines = doc.splitTextToSize(b.value, cW);
@@ -361,11 +280,12 @@
                 const total = doc.internal.getNumberOfPages();
                 for(let i = 1; i <= total; i++) {
                     doc.setPage(i); if(Math.round(doc.internal.pageSize.getWidth()) === 210) {
-                        doc.setFontSize(9).setFont("times", "italic").text("- " + i + " -", pW/2, pH - 10, { align: "center" });
+                        doc.setFontSize(8).setFont("times", "italic").text("- " + i + " -", pW/2, pH - 8, { align: "center" });
                     }
                 }
-                doc.save(`${document.getElementById('title').value || 'novel'}.pdf`);
-            } finally { loader.style.display = 'none'; }
+                doc.save(`${document.getElementById('title').value || 'kazue_studio'}.pdf`);
+            } catch(e) { alert("Generate failed."); }
+            finally { loader.style.display = 'none'; }
         }
     </script>
 </body>
