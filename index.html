@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kazue Pdf Studio - Pro Novel Builder</title>
+    <title>Kazue Pdf Studio - Professional Novel Builder</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -21,51 +21,47 @@
         * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
         body { background-color: var(--bg); color: var(--text-dark); margin: 0; padding-bottom: 120px; }
 
+        /* Navbar */
         nav {
             background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border); padding: 1rem 5%;
             display: flex; justify-content: space-between; align-items: center;
             position: sticky; top: 0; z-index: 1000;
         }
-
         .logo { font-weight: 800; font-size: 1.4rem; color: var(--primary); letter-spacing: -1px; }
-        .save-status { font-size: 0.75rem; color: var(--success); font-weight: 600; background: #dcfce7; padding: 4px 12px; border-radius: 20px; }
+        .save-status { font-size: 0.7rem; color: var(--success); font-weight: 700; background: #ecfdf5; padding: 4px 12px; border-radius: 20px; }
 
         .container { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
 
+        /* Cards */
         .card {
             background: var(--card); border: 1px solid var(--border);
             border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem;
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
         }
-
-        .grid-inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
-        label { display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; margin: 10px 0 5px 0; text-transform: uppercase; }
-        
+        label { display: block; font-size: 0.75rem; font-weight: 800; color: #64748b; margin: 10px 0 5px 0; text-transform: uppercase; }
         input[type="text"], textarea {
-            width: 100%; padding: 0.7rem; border: 1px solid var(--border);
-            border-radius: 8px; font-size: 0.9rem; margin-bottom: 10px; transition: 0.2s;
+            width: 100%; padding: 0.75rem; border: 1px solid var(--border);
+            border-radius: 10px; font-size: 0.9rem; margin-bottom: 10px; transition: 0.2s;
         }
         input:focus, textarea:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); }
 
-        /* Chapter Styles */
+        /* Chapter Boxes */
         .chapter-card {
             background: white; border: 2px solid var(--border);
             border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem; position: relative;
         }
-        .chapter-type { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; margin-bottom: 10px; display: block; }
+        .chapter-badge { font-size: 0.65rem; font-weight: 800; padding: 4px 8px; border-radius: 5px; margin-bottom: 10px; display: inline-block; }
         
         /* Blocks System */
-        .blocks-container { margin-top: 1rem; display: flex; flex-direction: column; gap: 1rem; }
+        .blocks-container { margin-top: 1rem; display: flex; flex-direction: column; gap: 0.8rem; }
         .block-item { 
-            padding: 1rem; border-radius: 10px; background: #f1f5f9; position: relative; 
+            padding: 1rem; border-radius: 12px; background: #f1f5f9; position: relative; 
             border-left: 4px solid var(--primary);
         }
-        .btn-delete-block { position: absolute; top: 5px; right: 5px; background: none; border: none; color: var(--danger); cursor: pointer; font-size: 0.8rem; }
+        .btn-del-block { position: absolute; top: 5px; right: 5px; background: none; border: none; color: var(--danger); cursor: pointer; font-size: 0.8rem; }
         
-        .block-image-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 5px; }
-
-        /* Buttons */
+        /* Floating Action Bar */
         .action-bar {
             position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%);
             background: #0f172a; padding: 0.8rem 1.5rem; border-radius: 50px;
@@ -74,12 +70,12 @@
         .btn {
             padding: 0.7rem 1.3rem; border-radius: 25px; border: none;
             font-weight: 700; cursor: pointer; transition: 0.2s; font-size: 0.85rem;
-            display: flex; align-items: center; gap: 8px;
+            display: flex; align-items: center; gap: 8px; color: white;
         }
-        .btn-add { background: var(--primary); color: white; }
-        .btn-secondary { background: #334155; color: white; }
+        .btn-add { background: var(--primary); }
+        .btn-sec { background: #334155; }
+        .btn-success { background: var(--success); }
         .btn-block { background: #cbd5e1; color: var(--text-dark); margin-top: 5px; padding: 5px 12px; font-size: 0.7rem; }
-        .btn-danger { background: #fee2e2; color: var(--danger); padding: 5px 10px; border-radius: 8px; border: none; cursor: pointer; }
 
         #loader {
             display: none; position: fixed; inset: 0; background: rgba(255,255,255,0.9);
@@ -89,7 +85,7 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         @media (max-width: 600px) {
-            .action-bar { width: 90%; flex-direction: column; border-radius: 20px; bottom: 1rem; }
+            .action-bar { width: 90%; flex-direction: column; border-radius: 20px; bottom: 1rem; padding: 1rem; }
             .btn { width: 100%; justify-content: center; }
         }
     </style>
@@ -98,95 +94,69 @@
 
 <nav>
     <div class="logo">Kazue Pdf Studio</div>
-    <div id="save-status" class="save-status">Draf Aman</div>
+    <div id="save-status" class="save-status">Draf Tersimpan</div>
 </nav>
 
 <div class="container">
     <!-- Metadata Card -->
     <div class="card">
         <label>Judul Utama Novel</label>
-        <input type="text" id="title" class="save-local" placeholder="Masukkan judul lengkap novel...">
-        <div class="grid-inputs">
-            <div><label>Penulis</label><input type="text" id="author" class="save-local" placeholder="Nama Penulis"></div>
-            <div><label>Ilustrator</label><input type="text" id="illustrator" class="save-local" placeholder="Nama Ilustrator"></div>
-            <div><label>Genre</label><input type="text" id="genre" class="save-local" placeholder="Contoh: Romance, Fantasy"></div>
+        <input type="text" id="title" class="save-local" placeholder="Masukkan judul novel...">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
+            <div><label>Penulis</label><input type="text" id="author" class="save-local"></div>
+            <div><label>Ilustrator</label><input type="text" id="illustrator" class="save-local"></div>
             <div>
                 <label>Cover (File / URL)</label>
-                <input type="file" id="cover-file" accept="image/*" style="font-size: 0.7rem;">
-                <input type="text" id="cover-url" class="save-local" placeholder="Atau tempel Link Gambar...">
+                <input type="file" id="cover-file" accept="image/*">
+                <input type="text" id="cover-url" class="save-local" placeholder="URL Cover...">
             </div>
         </div>
         <label>Sinopsis</label>
-        <textarea id="synopsis" class="save-local" style="height: 120px;" placeholder="Tulis sinopsis novel Anda di sini..."></textarea>
+        <textarea id="synopsis" class="save-local" style="height: 100px;"></textarea>
     </div>
 
-    <!-- Chapter List -->
     <div id="chapters-list"></div>
 </div>
 
-<!-- Floating Navigation -->
 <div class="action-bar">
     <button class="btn btn-add" onclick="addChapter('biasa')">📑 + Bab Teks</button>
-    <button class="btn btn-secondary" onclick="addChapter('ilustrasi')">🖼️ + Bab Gambar</button>
-    <button class="btn btn-add" style="background: var(--success);" onclick="generatePDF()">🚀 DOWNLOAD PDF</button>
+    <button class="btn btn-sec" onclick="addChapter('ilustrasi')">🖼️ + Ilustrasi Full</button>
+    <button class="btn btn-success" onclick="generatePDF()">🚀 DOWNLOAD PDF</button>
 </div>
 
-<!-- Loading Overlay -->
-<div id="loader">
-    <div class="spinner"></div>
-    <p style="margin-top: 15px; font-weight: 700;">Menyusun Tata Letak Novel...</p>
-</div>
+<div id="loader"><div class="spinner"></div><p style="margin-top:15px; font-weight:700;">Menyusun Tata Letak Novel...</p></div>
 
 <script>
     const { jsPDF } = window.jspdf;
 
-    // --- Autosave Logic ---
+    // --- Autosave ---
     function saveAll() {
         const data = {
-            title: document.getElementById('title').value,
-            author: document.getElementById('author').value,
-            illustrator: document.getElementById('illustrator').value,
-            genre: document.getElementById('genre').value,
-            synopsis: document.getElementById('synopsis').value,
-            coverUrl: document.getElementById('cover-url').value,
-            chapters: []
+            title: document.getElementById('title').value, author: document.getElementById('author').value,
+            illustrator: document.getElementById('illustrator').value, synopsis: document.getElementById('synopsis').value,
+            coverUrl: document.getElementById('cover-url').value, chapters: []
         };
-
         document.querySelectorAll('.chapter-card').forEach(card => {
-            const chapter = {
-                type: card.dataset.type,
-                title: card.querySelector('.ch-title').value,
-                blocks: []
-            };
-            
+            const ch = { type: card.dataset.type, title: card.querySelector('.ch-title').value, blocks: [] };
             card.querySelectorAll('.block-item').forEach(block => {
-                chapter.blocks.push({
-                    type: block.dataset.type,
-                    text: block.querySelector('textarea')?.value || '',
-                    url: block.querySelector('.block-url')?.value || ''
-                });
+                ch.blocks.push({ type: block.dataset.type, text: block.querySelector('textarea')?.value || '', url: block.querySelector('.block-url')?.value || '' });
             });
-            
-            if(chapter.type === 'ilustrasi') chapter.fullUrl = card.querySelector('.url-full')?.value || '';
-            data.chapters.push(chapter);
+            if(ch.type === 'ilustrasi') ch.fullUrl = card.querySelector('.url-full')?.value || '';
+            data.chapters.push(ch);
         });
-
-        localStorage.setItem('kazue_final_draft', JSON.stringify(data));
+        localStorage.setItem('kazue_vfinal_seamless', JSON.stringify(data));
         document.getElementById('save-status').innerText = "Tersimpan: " + new Date().toLocaleTimeString();
     }
 
     function loadAll() {
-        const saved = localStorage.getItem('kazue_final_draft');
+        const saved = localStorage.getItem('kazue_vfinal_seamless');
         if (!saved) return;
         const data = JSON.parse(saved);
-        
         document.getElementById('title').value = data.title || '';
         document.getElementById('author').value = data.author || '';
         document.getElementById('illustrator').value = data.illustrator || '';
-        document.getElementById('genre').value = data.genre || '';
         document.getElementById('synopsis').value = data.synopsis || '';
         document.getElementById('cover-url').value = data.coverUrl || '';
-
         data.chapters.forEach(ch => addChapter(ch.type, ch));
     }
 
@@ -199,217 +169,110 @@
         div.id = `ch-${id}`;
         div.dataset.type = type;
 
-        let html = `<button class="btn-danger" style="position:absolute; top:15px; right:15px;" onclick="document.getElementById('ch-${id}').remove(); saveAll();">Hapus Bab</button>`;
-        
+        let html = `<button style="position:absolute; top:15px; right:15px; background:#fee2e2; border:none; color:#ef4444; padding:5px 10px; border-radius:8px; cursor:pointer; font-size:0.7rem;" onclick="document.getElementById('ch-${id}').remove(); saveAll();">Hapus Bab</button>`;
         if(type === 'biasa') {
-            html += `
-                <span class="chapter-type" style="color:var(--primary)">Mode: Bab Teks</span>
-                <input type="text" class="ch-title save-local" placeholder="Judul Bab (Contoh: Bab 1: Pertemuan)" value="${saved?.title || ''}">
-                <div class="blocks-container" id="blocks-${id}"></div>
-                <div style="margin-top:15px; display:flex; gap:10px;">
-                    <button class="btn btn-block" onclick="addBlock('${id}', 'text')">➕ Teks</button>
-                    <button class="btn btn-block" onclick="addBlock('${id}', 'image')">➕ Gambar</button>
-                </div>
-            `;
+            html += `<span class="chapter-badge" style="background:#e0e7ff; color:#4338ca;">Bab Teks</span>
+                    <input type="text" class="ch-title save-local" placeholder="Judul Bab..." value="${saved?.title || ''}">
+                    <div class="blocks-container" id="blocks-${id}"></div>
+                    <div style="margin-top:10px; display:flex; gap:8px;">
+                        <button class="btn btn-block" onclick="addBlock('${id}', 'text')">+ Teks</button>
+                        <button class="btn btn-block" onclick="addBlock('${id}', 'image')">+ Gambar</button>
+                    </div>`;
         } else {
-            html += `
-                <span class="chapter-type" style="color:#d97706">Mode: Bab Ilustrasi (Full Page)</span>
-                <input type="text" class="ch-title save-local" placeholder="Nama Ilustrasi" value="${saved?.title || ''}">
-                <label>Pilih File Gambar:</label>
-                <input type="file" class="file-full" accept="image/*" style="font-size:0.8rem;">
-                <input type="text" class="url-full save-local" placeholder="Atau Tempel URL Gambar..." value="${saved?.fullUrl || ''}">
-            `;
+            html += `<span class="chapter-badge" style="background:#fef3c7; color:#d97706;">Ilustrasi Fullpage</span>
+                    <input type="text" class="ch-title save-local" placeholder="Nama Ilustrasi..." value="${saved?.title || ''}">
+                    <input type="file" class="file-full" accept="image/*">
+                    <input type="text" class="url-full save-local" placeholder="Atau URL..." value="${saved?.fullUrl || ''}">`;
         }
-
         div.innerHTML = html;
         list.appendChild(div);
-
-        if(saved && saved.blocks) {
-            saved.blocks.forEach(b => addBlock(id, b.type, b));
-        } else if (type === 'biasa') {
-            addBlock(id, 'text');
-        }
-
+        if(saved && saved.blocks) saved.blocks.forEach(b => addBlock(id, b.type, b));
+        else if(type === 'biasa') addBlock(id, 'text');
         div.querySelectorAll('.save-local').forEach(el => el.addEventListener('input', saveAll));
     }
 
-    function addBlock(chapterId, type, saved = null) {
-        const container = document.getElementById(`blocks-${chapterId}`);
+    function addBlock(chId, type, saved = null) {
+        const cont = document.getElementById(`blocks-${chId}`);
         const div = document.createElement('div');
         div.className = 'block-item';
         div.dataset.type = type;
-
-        if(type === 'text') {
-            div.innerHTML = `
-                <button class="btn-delete-block" onclick="this.parentElement.remove(); saveAll();">✕</button>
-                <textarea class="save-local" placeholder="Tulis narasi novel..." style="height:120px; margin-bottom:0;">${saved?.text || ''}</textarea>
-            `;
-        } else {
-            div.innerHTML = `
-                <button class="btn-delete-block" onclick="this.parentElement.remove(); saveAll();">✕</button>
-                <div class="grid-inputs">
-                    <input type="file" class="block-file" accept="image/*" style="font-size:0.7rem;">
-                    <input type="text" class="block-url save-local" placeholder="URL Gambar..." value="${saved?.url || ''}">
-                </div>
-            `;
-        }
-
-        container.appendChild(div);
+        div.innerHTML = type === 'text' ? 
+            `<button class="btn-del-block" onclick="this.parentElement.remove(); saveAll();">✕</button><textarea class="save-local" placeholder="Tulis cerita...">${saved?.text || ''}</textarea>` :
+            `<button class="btn-del-block" onclick="this.parentElement.remove(); saveAll();">✕</button><div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"><input type="file" class="block-file" accept="image/*"><input type="text" class="block-url save-local" placeholder="URL Gambar..." value="${saved?.url || ''}"></div>`;
+        cont.appendChild(div);
         div.querySelectorAll('.save-local').forEach(el => el.addEventListener('input', saveAll));
     }
 
-    // --- Helper Functions ---
-    async function getImg(fileEl, urlVal) {
-        if (fileEl?.files[0]) {
-            return new Promise(r => {
-                const reader = new FileReader();
-                reader.onload = e => r(e.target.result);
-                reader.readAsDataURL(fileEl.files[0]);
-            });
-        }
-        if (urlVal) {
-            try {
-                const res = await fetch(urlVal);
-                const blob = await res.blob();
-                return new Promise(r => {
-                    const rd = new FileReader();
-                    rd.onload = e => r(e.target.result);
-                    rd.readAsDataURL(blob);
-                });
-            } catch(e) { return null; }
-        }
+    // --- PDF Engine ---
+    async function getImg(fileEl, url) {
+        if (fileEl?.files[0]) return new Promise(r => { const reader = new FileReader(); reader.onload = e => r(e.target.result); reader.readAsDataURL(fileEl.files[0]); });
+        if (url) try { const res = await fetch(url); const b = await res.blob(); return new Promise(r => { const rd = new FileReader(); rd.onload = e => r(e.target.result); rd.readAsDataURL(b); }); } catch(e) { return null; }
         return null;
     }
 
-    async function getDim(src) {
-        return new Promise(r => {
-            const i = new Image();
-            i.onload = () => r({ w: i.width, h: i.height });
-            i.src = src;
-        });
-    }
+    async function getDim(src) { return new Promise(r => { const i = new Image(); i.onload = () => r({ w: i.width, h: i.height }); i.src = src; }); }
 
-    // --- PDF Engine (The Core) ---
     async function generatePDF() {
-        const loader = document.getElementById('loader');
-        loader.style.display = 'flex';
-
+        document.getElementById('loader').style.display = 'flex';
         const doc = new jsPDF({ unit: 'px', hotfixes: ["px_scaling"] });
         doc.deletePage(1);
 
-        // 1. COVER PAGE
+        // 1. COVER
         const cover = await getImg(document.getElementById('cover-file'), document.getElementById('cover-url').value);
-        if(cover) {
-            const d = await getDim(cover);
-            doc.addPage([d.w, d.h], d.w > d.h ? 'l' : 'p');
-            doc.addImage(cover, 'JPEG', 0, 0, d.w, d.h, undefined, 'MEDIUM');
-        }
+        if(cover) { const d = await getDim(cover); doc.addPage([d.w, d.h], d.w > d.h ? 'l' : 'p'); doc.addImage(cover, 'JPEG', 0, 0, d.w, d.h, undefined, 'MEDIUM'); }
 
-        // 2. METADATA PAGE (FIXED - Gambar 1)
+        // 2. METADATA
         doc.addPage([600, 850], 'p');
         let curY = 60;
-        
-        // Judul Novel Centered & Wrapping
         doc.setFontSize(22); doc.setFont("helvetica", "bold");
-        const titleText = document.getElementById('title').value || "Novel Tanpa Judul";
-        const titleLines = doc.splitTextToSize(titleText, 500);
-        titleLines.forEach(l => {
-            doc.text(l, 300, curY, { align: 'center' });
-            curY += 25;
-        });
-        
-        // Metadata Centered
-        doc.setFontSize(10); doc.setFont("helvetica", "normal");
-        curY += 10;
-        const meta = [
-            `Penulis: ${document.getElementById('author').value || "-"}`,
-            `Ilustrator: ${document.getElementById('illustrator').value || "-"}`,
-            `Genre: ${document.getElementById('genre').value || "-"}`
-        ];
-        meta.forEach(m => {
-            doc.text(m, 300, curY, { align: 'center' });
-            curY += 15;
-        });
-
-        // Sinopsis Wrapping
-        curY += 35;
-        doc.setFont("helvetica", "bold");
-        doc.text("SINOPSIS", 40, curY);
+        const tLines = doc.splitTextToSize(document.getElementById('title').value || "Novel", 500);
+        tLines.forEach(l => { doc.text(l, 300, curY, { align: 'center' }); curY += 25; });
+        doc.setFontSize(10); doc.setFont("helvetica", "normal"); curY += 15;
+        doc.text(`Penulis: ${document.getElementById('author').value || "-"} | Ilustrator: ${document.getElementById('illustrator').value || "-"}`, 300, curY, { align: 'center' });
+        curY += 40; doc.setFont("helvetica", "bold"); doc.text("SINOPSIS", 40, curY); curY += 15;
         doc.setFont("helvetica", "normal");
-        curY += 15;
-        const synLines = doc.splitTextToSize(document.getElementById('synopsis').value || "", 520);
-        synLines.forEach(l => {
-            if(curY > 800) { doc.addPage(); curY = 40; }
-            doc.text(l, 40, curY);
-            curY += 14;
-        });
+        const sLines = doc.splitTextToSize(document.getElementById('synopsis').value || "", 520);
+        sLines.forEach(l => { if(curY > 800) { doc.addPage(); curY = 40; } doc.text(l, 40, curY); curY += 14; });
 
-        // 3. CHAPTERS (FIXED - Gambar 2 & 3)
-        const cards = document.querySelectorAll('.chapter-card');
-        for (const card of cards) {
+        // 3. CHAPTERS FLOW (Seamless Style)
+        for (const card of document.querySelectorAll('.chapter-card')) {
             const type = card.dataset.type;
             const title = card.querySelector('.ch-title').value;
 
             if(type === 'ilustrasi') {
                 const src = await getImg(card.querySelector('.file-full'), card.querySelector('.url-full').value);
-                if(src) {
-                    const d = await getDim(src);
-                    doc.addPage([d.w, d.h], d.w > d.h ? 'l' : 'p');
-                    doc.addImage(src, 'JPEG', 0, 0, d.w, d.h, undefined, 'MEDIUM');
-                }
+                if(src) { const d = await getDim(src); doc.addPage([d.w, d.h], d.w > d.h ? 'l' : 'p'); doc.addImage(src, 'JPEG', 0, 0, d.w, d.h, undefined, 'MEDIUM'); }
             } else {
-                // Bab Teks
-                doc.addPage([600, 850], 'p');
-                curY = 60;
-                
-                // Judul Bab Bold & Center (Gambar 3)
+                doc.addPage([600, 850], 'p'); curY = 60;
                 doc.setFontSize(18); doc.setFont("helvetica", "bold");
                 doc.text(title || "Bab Baru", 300, curY, { align: 'center' });
-                curY += 50;
-                
-                doc.setFontSize(11); doc.setFont("helvetica", "normal");
+                curY += 50; doc.setFontSize(11); doc.setFont("helvetica", "normal");
+
                 const blocks = card.querySelectorAll('.block-item');
-                
                 for (const block of blocks) {
                     if(block.dataset.type === 'text') {
-                        const txt = block.querySelector('textarea').value;
-                        const lines = doc.splitTextToSize(txt, 520);
-                        
+                        const lines = doc.splitTextToSize(block.querySelector('textarea').value, 520);
                         lines.forEach(line => {
-                            if(curY > 810) { // Auto-Pagination (Gambar 2)
-                                doc.addPage([600, 850], 'p');
-                                curY = 50;
-                            }
-                            doc.text(line, 40, curY);
-                            curY += 15;
+                            if(curY > 810) { doc.addPage([600, 850], 'p'); curY = 50; }
+                            doc.text(line, 40, curY); curY += 15;
                         });
-                        curY += 10;
+                        curY += 5;
                     } else {
-                        // Gambar dalam Bab
                         const img = await getImg(block.querySelector('.block-file'), block.querySelector('.block-url').value);
                         if(img) {
-                            const d = await getDim(img);
-                            const ratio = d.w / 500;
-                            const h = d.h / ratio;
-
-                            if(curY + h > 810) {
-                                doc.addPage([600, 850], 'p');
-                                curY = 50;
-                            }
-                            doc.addImage(img, 'JPEG', 50, curY, 500, h, undefined, 'MEDIUM');
-                            curY += h + 20;
+                            const d = await getDim(img); const r = d.w / 520; const h = d.h / r;
+                            if(curY + h > 810) { doc.addPage([600, 850], 'p'); curY = 50; }
+                            doc.addImage(img, 'JPEG', 40, curY, 520, h, undefined, 'MEDIUM');
+                            curY += h + 15;
                         }
                     }
                 }
             }
         }
-
         doc.save((document.getElementById('title').value || 'novel') + '.pdf');
-        loader.style.display = 'none';
+        document.getElementById('loader').style.display = 'none';
     }
-
     window.onload = loadAll;
 </script>
-
 </body>
 </html>
